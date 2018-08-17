@@ -142,24 +142,36 @@ public class Main {
         mainFrame.setLocation(screenWidth - 300, screenHeight - 350);
         mainFrame.setSize(300, 300);
         mainFrame.setLayout(new GridLayout(2,1));
+
         JLabel textToTranslate = new JLabel("", JLabel.CENTER);
+
         JLabel translatedText = new JLabel("", JLabel.CENTER);
-        mainFrame.add(textToTranslate);
-        mainFrame.add(translatedText);
-        textToTranslate.setText(toTranslate);
-        if (!windowRun){
-            windowRun = true;
+        JScrollPane scrollPane = new JScrollPane(textToTranslate);
+        JPanel jPanel = new JPanel();
+        jPanel.add(scrollPane);
+        jPanel.add(textToTranslate);
+        jPanel.add(translatedText);
+
+        mainFrame.add(jPanel);
+
+//        mainFrame.add(scrollPane);
+//        mainFrame.add(textToTranslate);
+//        mainFrame.add(translatedText);
+        textToTranslate.setText("<html>"+toTranslate + "</html>");
+//        textToTranslate.setText(toTranslate);
+//        if (!windowRun){
+//            windowRun = true;
             mainFrame.setVisible(true);
-
-        try {
-            Thread.sleep(2000);
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        mainFrame.dispose();
-            windowRun = false;
-        }
+//
+//        try {
+//            Thread.sleep(2000);
+//
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        mainFrame.dispose();
+//            windowRun = false;
+//        }
     }
 
     public void getScreenSize(){
