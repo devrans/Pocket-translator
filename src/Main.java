@@ -24,9 +24,15 @@ import javax.swing.*;
 
 public class Main {
     private static boolean run = true;
+    private static boolean windowRun = false;
+    private static int screenWidth;
+    private static int screenHeight;
+
     public static void main(String[] args) throws IOException {
         Main man = new Main();
+        man.getScreenSize();
         man.backProcess();
+
     }
 
     public String getTextFromClipboard() {
@@ -133,6 +139,7 @@ public class Main {
 
     public void createFrame(String toTranslate) {
         JFrame mainFrame = new JFrame("Pocket translator");
+        mainFrame.setLocation(screenWidth - 300, screenHeight - 350);
         mainFrame.setSize(300, 300);
         mainFrame.setLayout(new GridLayout(2,1));
         JLabel textToTranslate = new JLabel("", JLabel.CENTER);
@@ -140,15 +147,26 @@ public class Main {
         mainFrame.add(textToTranslate);
         mainFrame.add(translatedText);
         textToTranslate.setText(toTranslate);
-        mainFrame.setVisible(true);
+        if (!windowRun){
+            windowRun = true;
+            mainFrame.setVisible(true);
+
         try {
-            Thread.sleep(1000);
+            Thread.sleep(2000);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         mainFrame.dispose();
+            windowRun = false;
+        }
+    }
 
+    public void getScreenSize(){
+
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+         screenWidth = gd.getDisplayMode().getWidth();
+         screenHeight = gd.getDisplayMode().getHeight();
     }
 
 
