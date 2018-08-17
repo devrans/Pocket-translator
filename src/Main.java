@@ -20,16 +20,16 @@ import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import javax.swing.*;
+
 public class Main {
     private static boolean run = true;
     public static void main(String[] args) throws IOException {
-
-        backProcess();
-        // translate();
-
+        Main man = new Main();
+        man.backProcess();
     }
 
-    public static String getTextFromClipboard() {
+    public String getTextFromClipboard() {
         String data = null;
         try {
             data = (String) Toolkit.getDefaultToolkit()
@@ -46,7 +46,7 @@ public class Main {
         return data;
     }
 
-    public static void translate() throws IOException {
+    public void translate() throws IOException {
 //        CloseableHttpClient httpclient = HttpClients.createDefault();
 //        try {
 //            HttpGet httpget = new HttpGet("https://translate.google.com/#en/pl/do");
@@ -82,38 +82,15 @@ public class Main {
 //            httpclient.close();
 //        }
 
-        Document doc = Jsoup.connect("https://translate.google.com/#en/pl/do").get();
-        System.out.println(doc);
+//        Document doc = Jsoup.connect("https://translate.google.com/#en/pl/do").get();
+//        System.out.println(doc);
 
-
-
-
-    }
-
-    public static void getTranslateFromRegex(String line){
-
-        // String to be scanned to find the pattern.
-        //String line = "This order was placed for QT3000! OK?";
-        String pattern = "(.m*)<span id=\"result_box\" class=\"short_text\" lang=\"pl\"><span>(.m*) </span></span>(.m*)";
-
-        //String patt = "(.*)<!(.*)";
-
-        // Create a Pattern object
-        Pattern r = Pattern.compile(pattern);
-
-        // Now create matcher object.
-        Matcher m = r.matcher(line);
-        if (m.find( )) {
-            System.out.println("Found value: " + m.group(0) );
-            System.out.println("Found value: " + m.group(1) );
-            System.out.println("Found value: " + m.group(2) );
-        }else {
-            System.out.println("NO MATCH");
-        }
+        createFrame(getTextFromClipboard());
 
     }
 
-    public static void backProcess() {
+
+    public void backProcess() {
         // might throw a UnsatisfiedLinkError if the native library fails to load or a RuntimeException if hooking fails
         GlobalKeyboardHook keyboardHook = new GlobalKeyboardHook(true); // use false here to switch to hook instead of raw input
 
@@ -130,6 +107,11 @@ public class Main {
                 if(event.isShiftPressed() && event.isControlPressed() && event.isMenuPressed()) {
                     System.out.println("ctrl shift alt");
                     System.out.println(getTextFromClipboard());
+                    try {
+                        translate();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
 
                 }
@@ -148,6 +130,28 @@ public class Main {
         finally { keyboardHook.shutdownHook(); }
 
     }
+
+    public void createFrame(String toTranslate) {
+        JFrame mainFrame = new JFrame("Pocket translator");
+        mainFrame.setSize(300, 300);
+        mainFrame.setLayout(new GridLayout(2,1));
+        JLabel textToTranslate = new JLabel("", JLabel.CENTER);
+        JLabel translatedText = new JLabel("", JLabel.CENTER);
+        mainFrame.add(textToTranslate);
+        mainFrame.add(translatedText);
+        textToTranslate.setText(toTranslate);
+        mainFrame.setVisible(true);
+        try {
+            Thread.sleep(1000);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mainFrame.dispose();
+
+    }
+
+
 
 }
 
