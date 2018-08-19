@@ -1,7 +1,9 @@
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,10 +13,14 @@ import lc.kra.system.keyboard.event.GlobalKeyAdapter;
 import lc.kra.system.keyboard.event.GlobalKeyEvent;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
@@ -180,6 +186,56 @@ public class Main {
          screenWidth = gd.getDisplayMode().getWidth();
          screenHeight = gd.getDisplayMode().getHeight();
     }
+    
+    
+    public String googleTranslateApi(String text, String translateFrom, String translateTo) {
+        String returnString = "";
+ 
+        try {
+            String textEncoded=URLEncoder.encode(text, "utf-8");
+            String url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl="+ translateFrom+"&tl="+translateTo+"&dt=t&q=" + textEncoded;
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpResponse response = httpclient.execute(new HttpGet(url));
+            StatusLine statusLine = response.getStatusLine();
+            if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                response.getEntity().writeTo(out);
+                String responseString = out.toString();
+                out.close();
+ 
+                String aJsonString = responseString;
+                
+                aJsonString = aJsonString.replace("[", "");
+                aJsonString = aJsonString.replace("]", "");
+                aJsonString = aJsonString.substring(1);
+                int plusIndex = aJsonString.indexOf('"');
+                aJsonString = aJsonString.substring(0, plusIndex);
+ 
+                returnString = aJsonString;
+            } else{
+                response.getEntity().getContent().close();
+                throw new IOException(statusLine.getReasonPhrase());
+            }
+        } catch(Exception e) {
+            returnString = e.getMessage();
+        }
+ 
+        return returnString;
+    }
+
+    
+//dependencies to add    
+//	<dependency>
+//	<groupId>org.apache.httpcomponents</groupId>
+//	<artifactId>httpclient</artifactId>
+//	<version>4.3.1</version>
+//</dependency>
+//
+//<dependency>
+//	<groupId>org.apache.httpcomponents</groupId>
+//	<artifactId>httpcore</artifactId>
+//	<version>4.4.10</version>
+//</dependency>
 
 
 
