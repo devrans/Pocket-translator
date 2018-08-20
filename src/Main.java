@@ -100,32 +100,38 @@ public class Main {
         JFrame mainFrame = new JFrame("Pocket translator");
         mainFrame.setLocation(screenWidth - 300, screenHeight - 350);
         mainFrame.setSize(300, 300);
+        GroupLayout gl = new GroupLayout(mainFrame.getContentPane());
+        GroupLayout.SequentialGroup sg = gl.createSequentialGroup();
+
+        mainFrame.getContentPane().setLayout(gl);
         mainFrame.setLayout(new GridLayout(2,1));
-
         JLabel textToTranslate = new JLabel("", JLabel.CENTER);
-
         JLabel translatedText = new JLabel("", JLabel.CENTER);
-        JScrollPane scrollPane = new JScrollPane(textToTranslate);
-        JPanel jPanel = new JPanel();
-  //      jPanel.add(scrollPane);
+        textToTranslate.setText("<html>"+toTranslate+"</html>");
+        translatedText.setText(googleTranslateApi(toTranslate, "en", "pl"));
+        sg.addComponent(textToTranslate).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(translatedText);
 
 
-
-
- //       mainFrame.add(scrollPane);
+        //       mainFrame.pack();
+//        JScrollPane scrollPane = new JScrollPane(textToTranslate);
+//        JPanel jPanel = new JPanel();
+//        jPanel.add(scrollPane);
+//
+//        mainFrame.add(scrollPane);
 //        mainFrame.add(textToTranslate);
 //        mainFrame.add(translatedText);
-        textToTranslate.setText(toTranslate);
-        translatedText.setText(googleTranslateApi(toTranslate, "en", "pl"));
-        jPanel.add(textToTranslate);
-        jPanel.add(translatedText);
-        mainFrame.add(jPanel);
+
+//        jPanel.add(textToTranslate);
+//        jPanel.add(translatedText);
+//        mainFrame.add(jPanel);
+
+
         if (!windowRun){
             windowRun = true;
             mainFrame.setVisible(true);
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(5000);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
