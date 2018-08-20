@@ -58,48 +58,6 @@ public class Main {
         return data;
     }
 
-    public void translate() throws IOException {
-//        CloseableHttpClient httpclient = HttpClients.createDefault();
-//        try {
-//            HttpGet httpget = new HttpGet("https://translate.google.com/#en/pl/do");
-//
-//            System.out.println("Executing request " + httpget.getRequestLine());
-//
-//            // Create a custom response handler
-//            ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
-//
-//                @Override
-//                public String handleResponse(
-//                        final HttpResponse response) throws ClientProtocolException, IOException {
-//                    int status = response.getStatusLine().getStatusCode();
-//                    if (status >= 200 && status < 300) {
-//                        HttpEntity entity = response.getEntity();
-//                        return entity != null ? EntityUtils.toString(entity) : null;
-//                    } else {
-//                        throw new ClientProtocolException("Unexpected response status: " + status);
-//                    }
-//                }
-//
-//            };
-//            String responseBody = httpclient.execute(httpget, responseHandler);
-//            System.out.println("----------------------------------------");
-//            System.out.println(responseBody);
-//            System.out.println("----------------------------------------");
-//            getTranslateFromRegex(responseBody);
-//        } catch (ClientProtocolException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            httpclient.close();
-//        }
-
-//        Document doc = Jsoup.connect("https://translate.google.com/#en/pl/do").get();
-//        System.out.println(doc);
-
-        createFrame(getTextFromClipboard());
-
-    }
 
 
     public void backProcess() {
@@ -119,12 +77,7 @@ public class Main {
                 if(event.isShiftPressed() && event.isControlPressed() && event.isMenuPressed()) {
                     System.out.println("ctrl shift alt");
                     System.out.println(getTextFromClipboard());
-                    try {
-                        translate();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+                        createFrame(getTextFromClipboard());
 
                 }
             }
@@ -154,30 +107,32 @@ public class Main {
         JLabel translatedText = new JLabel("", JLabel.CENTER);
         JScrollPane scrollPane = new JScrollPane(textToTranslate);
         JPanel jPanel = new JPanel();
-        jPanel.add(scrollPane);
-        jPanel.add(textToTranslate);
-        jPanel.add(translatedText);
+  //      jPanel.add(scrollPane);
 
-        mainFrame.add(jPanel);
 
-//        mainFrame.add(scrollPane);
+
+
+ //       mainFrame.add(scrollPane);
 //        mainFrame.add(textToTranslate);
 //        mainFrame.add(translatedText);
-        textToTranslate.setText("<html>"+toTranslate + "</html>");
-//        textToTranslate.setText(toTranslate);
-//        if (!windowRun){
-//            windowRun = true;
+        textToTranslate.setText(toTranslate);
+        translatedText.setText(googleTranslateApi(toTranslate, "en", "pl"));
+        jPanel.add(textToTranslate);
+        jPanel.add(translatedText);
+        mainFrame.add(jPanel);
+        if (!windowRun){
+            windowRun = true;
             mainFrame.setVisible(true);
-//
-//        try {
-//            Thread.sleep(2000);
-//
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        mainFrame.dispose();
-//            windowRun = false;
-//        }
+
+        try {
+            Thread.sleep(2000);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mainFrame.dispose();
+            windowRun = false;
+        }
     }
 
     public void getScreenSize(){
@@ -223,19 +178,7 @@ public class Main {
         return returnString;
     }
 
-    
-//dependencies to add    
-//	<dependency>
-//	<groupId>org.apache.httpcomponents</groupId>
-//	<artifactId>httpclient</artifactId>
-//	<version>4.3.1</version>
-//</dependency>
-//
-//<dependency>
-//	<groupId>org.apache.httpcomponents</groupId>
-//	<artifactId>httpcore</artifactId>
-//	<version>4.4.10</version>
-//</dependency>
+
 
 
 
